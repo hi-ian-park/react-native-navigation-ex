@@ -6,6 +6,7 @@ import Search from "../screens/Search";
 import Tv from "../screens/Tv";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../colors";
+import Stack from "./Stack";
 
 const Tab = createBottomTabNavigator();
 
