@@ -37,7 +37,7 @@ const Slide: React.FC<SlideProps> = ({
           <Styled.Column>
             <Styled.Title>{originalTitle}</Styled.Title>
             {voteAverage > 0 && (
-              <ExtendsStyled.Votes>⭐️{voteAverage}/10</ExtendsStyled.Votes>
+              <ExtendsStyled.Votes>⭐️ {voteAverage} / 10</ExtendsStyled.Votes>
             )}
             <Styled.Overview>{overview.slice(0, 90)}...</Styled.Overview>
           </Styled.Column>

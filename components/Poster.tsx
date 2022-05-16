@@ -17,5 +17,6 @@ const Styled = {
     width: 100px;
     height: 160px;
     border-radius: 6px;
+    background-color: ${({ theme }) => theme.background};
   `,
 };

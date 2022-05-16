@@ -58,54 +58,92 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
       <ActivityIndicator />
     </Styled.Loader>
   ) : (
-    <Styled.Container>
-      <Swiper
-        horizontal
-        showsButtons={false}
-        showsPagination={false}
-        containerStyle={{
-          width: "100%",
-          height: SCREEN_HEIGHT / 4,
-          marginBottom: 30,
-        }}
-        autoplay
-        autoplayTimeout={3.5}
-        loop
-      >
-        {nowPlaying.map((movie) => (
-          <Slide
-            key={movie.id}
-            backdropPath={movie.backdrop_path}
-            posterPath={movie.poster_path}
-            originalTitle={movie.original_title}
-            voteAverage={movie.vote_average}
-            overview={movie.overview}
-          />
-        ))}
-      </Swiper>
-      <Styled.ListTitle>Trending Movies</Styled.ListTitle>
-      <Styled.TrendingScroll
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingLeft: 20 }}
-      >
-        {trending?.map((movie) => (
-          <Styled.Movie key={movie.id}>
-            <Poster path={movie.poster_path} />
-            <Styled.Title>
-              {movie.original_title.slice(0, 13)}
-              {movie.original_title.length > 13 && "..."}
-            </Styled.Title>
-            <Styled.Votes>⭐️ {movie.vote_average} / 10</Styled.Votes>
-          </Styled.Movie>
-        ))}
-      </Styled.TrendingScroll>
-    </Styled.Container>
+    <Styled.SafeAreaView>
+      <Styled.Container>
+        <Swiper
+          horizontal
+          showsButtons={false}
+          showsPagination={false}
+          containerStyle={{
+            width: "100%",
+            height: SCREEN_HEIGHT / 4,
+            marginBottom: 30,
+          }}
+          autoplay
+          autoplayTimeout={3.5}
+          loop
+        >
+          {nowPlaying.map((movie) => (
+            <Slide
+              key={movie.id}
+              backdropPath={movie.backdrop_path}
+              posterPath={movie.poster_path}
+              originalTitle={movie.original_title}
+              voteAverage={movie.vote_average}
+              overview={movie.overview}
+            />
+          ))}
+        </Swiper>
+        <Styled.ListContainer>
+          <Styled.ListTitle>Trending Movies</Styled.ListTitle>
+          <Styled.TrendingScroll
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            {trending?.map((movie) => (
+              <Styled.Movie key={movie.id}>
+                <Poster path={movie.poster_path} />
+                <Styled.Title>
+                  {movie.original_title.slice(0, 13)}
+                  {movie.original_title.length > 13 && "..."}
+                </Styled.Title>
+                {movie.vote_average > 0 && (
+                  <Styled.Votes>⭐️ {movie.vote_average} / 10</Styled.Votes>
+                )}
+              </Styled.Movie>
+            ))}
+          </Styled.TrendingScroll>
+        </Styled.ListContainer>
+
+        <Styled.ListContainer>
+          <Styled.ListTitle>Coming Soon</Styled.ListTitle>
+          {upComing.map((movie) => (
+            <Styled.HorizontalMovie key={movie.id}>
+              <Poster path={movie.poster_path} />
+              <Styled.HorizontalColumn>
+                <Styled.Title>{movie.original_title}</Styled.Title>
+                <Styled.Date>
+                  Coming:{" "}
+                  {new Date(movie.release_date).toLocaleDateString("ko")}
+                </Styled.Date>
+                <Styled.OverView>
+                  {movie.overview.length > 140
+                    ? movie.overview.slice(0, 140)
+                    : movie.overview}
+                </Styled.OverView>
+              </Styled.HorizontalColumn>
+            </Styled.HorizontalMovie>
+          ))}
+        </Styled.ListContainer>
+      </Styled.Container>
+    </Styled.SafeAreaView>
   );
 };
 
 const Styled = {
+  SafeAreaView: styled.SafeAreaView``,
+
   Container: styled.ScrollView``,
+
+  HorizontalMovie: styled.View`
+    flex-direction: row;
+    margin-bottom: 10px;
+  `,
+
+  HorizontalColumn: styled.View`
+    margin-left: 10px;
+    width: 100%;
+  `,
 
   Loader: styled.View`
     flex: 1;
@@ -113,11 +151,16 @@ const Styled = {
     justify-content: center;
   `,
 
+  ListContainer: styled.View`
+    padding: 0 20px;
+    margin-bottom: 40px;
+  `,
+
   ListTitle: styled.Text`
     color: ${({ theme }) => theme.text};
     font-size: 18px;
     font-weight: 600;
-    margin-left: 20px;
+    margin-bottom: 10px;
   `,
 
   Movie: styled.View`
@@ -136,8 +179,17 @@ const Styled = {
     color: ${({ theme }) => theme.text};
   `,
 
-  TrendingScroll: styled.ScrollView`
-    margin-top: 10px;
+  OverView: styled.Text`
+    color: ${({ theme }) => theme.text};
+    width: 70%;
+  `,
+
+  TrendingScroll: styled.ScrollView``,
+
+  Date: styled.Text`
+    font-size: 12px;
+    color: ${({ theme }) => theme.text};
+    margin-bottom: 5px;
   `,
 };
 
