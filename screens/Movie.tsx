@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Dimensions } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
@@ -14,6 +13,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
   navigation: { navigate },
 }) => {
+  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [nowPlaying, setNowPlaying] = useState([]);
   const [upComing, setUpComing] = useState([]);
@@ -53,13 +53,23 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
     getData();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getData();
+    setRefreshing(false);
+  };
+
   return loading ? (
     <Styled.Loader>
       <ActivityIndicator />
     </Styled.Loader>
   ) : (
     <Styled.SafeAreaView>
-      <Styled.Container>
+      <Styled.Container
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <Swiper
           horizontal
           showsButtons={false}
@@ -114,7 +124,11 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
                 <Styled.Title>{movie.original_title}</Styled.Title>
                 <Styled.Date>
                   Coming:{" "}
-                  {new Date(movie.release_date).toLocaleDateString("ko")}
+                  {new Date(movie.release_date).toLocaleDateString("ko", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </Styled.Date>
                 <Styled.OverView>
                   {movie.overview.length > 140
