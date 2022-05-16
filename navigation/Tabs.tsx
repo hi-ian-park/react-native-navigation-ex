@@ -6,15 +6,17 @@ import Search from "../screens/Search";
 import Tv from "../screens/Tv";
 import { Ionicons } from "@expo/vector-icons";
 import { theme } from "../colors";
-import Stack from "./Stack";
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme() || "light";
   const palette = theme[colorScheme];
   return (
     <Tab.Navigator
+      sceneContainerStyle={{
+        backgroundColor: palette.background,
+      }}
       screenOptions={{
         tabBarStyle: {
           backgroundColor: palette.background,
