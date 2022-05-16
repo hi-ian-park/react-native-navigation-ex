@@ -1,8 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from "react";
 import { ActivityIndicator, Dimensions } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
+import Poster from "../components/Poster";
 import Slide from "../components/Slide";
 
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -19,9 +21,10 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
 
   const getTrending = async () => {
     const response = await fetch(
-      `${BASE_URL}/movie/trending/movie/week?api_key=${API_KEY}`
+      `${BASE_URL}/trending/movie/week?api_key=${API_KEY}`
     );
     const { results } = await response.json();
+    console.log("results: ", results);
     setTrending(results);
   };
 
@@ -60,7 +63,11 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
         horizontal
         showsButtons={false}
         showsPagination={false}
-        containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
+        containerStyle={{
+          width: "100%",
+          height: SCREEN_HEIGHT / 4,
+          marginBottom: 30,
+        }}
         autoplay
         autoplayTimeout={3.5}
         loop
@@ -76,6 +83,23 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
           />
         ))}
       </Swiper>
+      <Styled.ListTitle>Trending Movies</Styled.ListTitle>
+      <Styled.TrendingScroll
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingLeft: 20 }}
+      >
+        {trending?.map((movie) => (
+          <Styled.Movie key={movie.id}>
+            <Poster path={movie.poster_path} />
+            <Styled.Title>
+              {movie.original_title.slice(0, 13)}
+              {movie.original_title.length > 13 && "..."}
+            </Styled.Title>
+            <Styled.Votes>⭐️ {movie.vote_average} / 10</Styled.Votes>
+          </Styled.Movie>
+        ))}
+      </Styled.TrendingScroll>
     </Styled.Container>
   );
 };
@@ -87,6 +111,33 @@ const Styled = {
     flex: 1;
     align-items: center;
     justify-content: center;
+  `,
+
+  ListTitle: styled.Text`
+    color: ${({ theme }) => theme.text};
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 20px;
+  `,
+
+  Movie: styled.View`
+    align-items: center;
+    margin-right: 20px;
+  `,
+
+  Title: styled.Text`
+    color: ${({ theme }) => theme.text};
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  `,
+
+  Votes: styled.Text`
+    color: ${({ theme }) => theme.text};
+  `,
+
+  TrendingScroll: styled.ScrollView`
+    margin-top: 10px;
   `,
 };
 
