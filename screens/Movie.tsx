@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import Swiper from "react-native-swiper";
 import styled from "styled-components/native";
-import Poster from "../components/Poster";
 import Slide from "../components/Slide";
+import VCard from "../components/VCard";
+import HCard from "../components/HCard";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = "d8e560fb14d2560d6f578c07fee2ac0e";
@@ -24,7 +25,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
       `${BASE_URL}/trending/movie/week?api_key=${API_KEY}`
     );
     const { results } = await response.json();
-    console.log("results: ", results);
+
     setTrending(results);
   };
 
@@ -101,16 +102,12 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
             showsHorizontalScrollIndicator={false}
           >
             {trending?.map((movie) => (
-              <Styled.Movie key={movie.id}>
-                <Poster path={movie.poster_path} />
-                <Styled.Title>
-                  {movie.original_title.slice(0, 13)}
-                  {movie.original_title.length > 13 && "..."}
-                </Styled.Title>
-                {movie.vote_average > 0 && (
-                  <Styled.Votes>⭐️ {movie.vote_average} / 10</Styled.Votes>
-                )}
-              </Styled.Movie>
+              <VCard
+                key={movie.id}
+                posterPath={movie.poster_path}
+                title={movie.original_title}
+                votes={movie.vote_average}
+              />
             ))}
           </Styled.TrendingScroll>
         </Styled.ListContainer>
@@ -118,25 +115,14 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
         <Styled.ListContainer>
           <Styled.ListTitle>Coming Soon</Styled.ListTitle>
           {upComing.map((movie) => (
-            <Styled.HorizontalMovie key={movie.id}>
-              <Poster path={movie.poster_path} />
-              <Styled.HorizontalColumn>
-                <Styled.Title>{movie.original_title}</Styled.Title>
-                <Styled.Date>
-                  Coming:{" "}
-                  {new Date(movie.release_date).toLocaleDateString("ko", {
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                </Styled.Date>
-                <Styled.OverView>
-                  {movie.overview.length > 140
-                    ? movie.overview.slice(0, 140)
-                    : movie.overview}
-                </Styled.OverView>
-              </Styled.HorizontalColumn>
-            </Styled.HorizontalMovie>
+            <HCard
+              key={movie.id}
+              posterPath={movie.poster_path}
+              title={movie.original_title}
+              votes={movie.vote_average}
+              releaseDate={movie.release_date}
+              overview={movie.overview}
+            />
           ))}
         </Styled.ListContainer>
       </Styled.Container>
@@ -148,16 +134,6 @@ const Styled = {
   SafeAreaView: styled.SafeAreaView``,
 
   Container: styled.ScrollView``,
-
-  HorizontalMovie: styled.View`
-    flex-direction: row;
-    margin-bottom: 10px;
-  `,
-
-  HorizontalColumn: styled.View`
-    margin-left: 10px;
-    width: 100%;
-  `,
 
   Loader: styled.View`
     flex: 1;
@@ -177,34 +153,7 @@ const Styled = {
     margin-bottom: 10px;
   `,
 
-  Movie: styled.View`
-    align-items: center;
-    margin-right: 20px;
-  `,
-
-  Title: styled.Text`
-    color: ${({ theme }) => theme.text};
-    font-weight: 600;
-    margin-top: 10px;
-    margin-bottom: 5px;
-  `,
-
-  Votes: styled.Text`
-    color: ${({ theme }) => theme.text};
-  `,
-
-  OverView: styled.Text`
-    color: ${({ theme }) => theme.text};
-    width: 70%;
-  `,
-
   TrendingScroll: styled.ScrollView``,
-
-  Date: styled.Text`
-    font-size: 12px;
-    color: ${({ theme }) => theme.text};
-    margin-bottom: 5px;
-  `,
 };
 
 export default Movie;
