@@ -4,6 +4,7 @@ import styled from "styled-components/native";
 import { BlurView } from "expo-blur";
 import { makeImgPath } from "../utils";
 import Poster from "./Poster";
+import Votes from "./Votes";
 
 interface SlideProps {
   backdropPath: string;
@@ -36,9 +37,7 @@ const Slide: React.FC<SlideProps> = ({
           <Poster path={posterPath} />
           <Styled.Column>
             <Styled.Title>{originalTitle}</Styled.Title>
-            {voteAverage > 0 && (
-              <ExtendsStyled.Votes>⭐️ {voteAverage} / 10</ExtendsStyled.Votes>
-            )}
+            <Votes votes={voteAverage} />
             <Styled.Overview>{overview.slice(0, 90)}...</Styled.Overview>
           </Styled.Column>
         </Styled.Wrapper>
@@ -73,11 +72,5 @@ const Styled = {
   Column: styled.View`
     width: 50%;
     margin-left: 15px;
-  `,
-};
-
-const ExtendsStyled = {
-  Votes: styled(Styled.Overview)`
-    font-size: 12px;
   `,
 };
