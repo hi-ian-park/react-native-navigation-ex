@@ -6,7 +6,7 @@ import Votes from "./Votes";
 interface VCardProps {
   posterPath: string;
   title: string;
-  votes: number;
+  votes?: number;
 }
 
 const VCard: React.FC<VCardProps> = ({ posterPath, title, votes }) => {
@@ -17,7 +17,7 @@ const VCard: React.FC<VCardProps> = ({ posterPath, title, votes }) => {
         {title.slice(0, 13)}
         {title.length > 13 && "..."}
       </Styled.Title>
-      <Votes votes={votes} />
+      {votes && <Votes votes={votes} />}
     </Styled.Container>
   );
 };
@@ -25,7 +25,6 @@ const VCard: React.FC<VCardProps> = ({ posterPath, title, votes }) => {
 const Styled = {
   Container: styled.View`
     align-items: center;
-    margin-right: 20px;
   `,
   Title: styled.Text`
     color: ${({ theme }) => theme.text};
