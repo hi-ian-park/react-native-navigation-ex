@@ -7,6 +7,7 @@ import Root from "./navigation/Root";
 import { useColorScheme } from "react-native";
 import { theme } from "./styles/theme";
 import { ThemeProvider } from "styled-components";
+import { SWRConfig } from "swr";
 
 export default function App() {
   const [ready, setReady] = useState(false);
@@ -26,10 +27,20 @@ export default function App() {
     );
 
   return (
-    <ThemeProvider theme={theme[colorScheme]}>
-      <NavigationContainer>
-        <Root />
-      </NavigationContainer>
-    </ThemeProvider>
+    <SWRConfig
+      value={{
+        onError: (error, key) => {
+          if ((error.status !== 403) & (error.status !== 404)) {
+            // send error to Sentry
+          }
+        },
+      }}
+    >
+      <ThemeProvider theme={theme[colorScheme]}>
+        <NavigationContainer>
+          <Root />
+        </NavigationContainer>
+      </ThemeProvider>
+    </SWRConfig>
   );
 }
