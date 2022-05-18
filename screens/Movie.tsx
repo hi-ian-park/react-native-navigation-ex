@@ -1,26 +1,34 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useState, useEffect } from "react";
-import { ActivityIndicator, Dimensions } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Dimensions, View } from "react-native";
 import Swiper from "react-native-swiper";
 import useSWR from "swr";
 import styled from "styled-components/native";
 import Slide from "../components/Slide";
 import VCard from "../components/VCard";
 import HCard from "../components/HCard";
-import { fetcher, nowPlayingUrl, trendingUrl, upComingUrl } from "../api";
+import { fetcher, apiUrl } from "../api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
   const [refreshing, setRefreshing] = useState(false);
 
-  const { data: trending, error: trendingError } = useSWR(trendingUrl, fetcher);
-  const { data: nowPlaying, error: playingError } = useSWR(
-    nowPlayingUrl,
+  const { data: trendingData, error: trendingError } = useSWR(
+    apiUrl.trendingUrl,
     fetcher
   );
-  const { data: upComing, error: upComingError } = useSWR(upComingUrl, fetcher);
-  const isLoading = !trending || !nowPlaying || !upComing;
+  const { data: nowPlayingData, error: playingError } = useSWR(
+    apiUrl.nowPlayingUrl,
+    fetcher
+  );
+  const { data: upComingData, error: upComingError } = useSWR(
+    apiUrl.upComingUrl,
+    fetcher
+  );
+
+  const isLoading = !trendingData || !nowPlayingData || !upComingData;
+  const isError = trendingError || playingError || upComingError;
   const onRefresh = async () => {};
 
   const renderCard = {
@@ -33,7 +41,6 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
         overview={item.overview}
       />
     ),
-
     h: ({ item }) => (
       <HCard
         posterPath={item.poster_path}
@@ -62,6 +69,13 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
         <ActivityIndicator />
       </Styled.Loader>
     );
+
+  if (isError)
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        Some Error!
+      </View>
+    );
   return (
     <Styled.SafeAreaView>
       <Styled.Container
@@ -82,7 +96,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
               autoplayTimeout={3.5}
               loop
             >
-              {nowPlaying?.map((movie) => (
+              {nowPlayingData.results?.map((movie) => (
                 <Slide
                   key={movie.id}
                   backdropPath={movie.backdrop_path}
@@ -96,7 +110,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
             <Styled.ListContainer>
               <Styled.ListTitle>Trending Movies</Styled.ListTitle>
               <Styled.TrendingScroll
-                data={trending}
+                data={trendingData.results}
                 keyExtractor={movieKeyExtractor}
                 contentContainerStyle={{ paddingHorizontal: 20 }}
                 renderItem={renderCard.v}
@@ -109,7 +123,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
           </>
         }
         keyExtractor={movieKeyExtractor}
-        data={upComing}
+        data={upComingData.results}
         ItemSeparatorComponent={separator.h}
         renderItem={renderCard.h}
       />

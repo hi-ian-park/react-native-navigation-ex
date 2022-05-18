@@ -24,12 +24,12 @@ export default function App() {
         onError={console.warn}
       />
     );
-  else
-    return (
-      <ThemeProvider theme={theme[colorScheme]}>
-        <NavigationContainer>
-          <Root />
-        </NavigationContainer>
-      </ThemeProvider>
-    );
+
+  return (
+    <ThemeProvider theme={theme[colorScheme]}>
+      <NavigationContainer>
+        <Root />
+      </NavigationContainer>
+    </ThemeProvider>
+  );
 }
