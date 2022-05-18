@@ -7,9 +7,12 @@ interface VCardProps {
   posterPath: string;
   title: string;
   votes?: number;
+  releaseDate?: string;
+  overview?: string;
 }
 
-const VCard: React.FC<VCardProps> = ({ posterPath, title, votes }) => {
+const VCard: React.FC<VCardProps> = (props) => {
+  const { posterPath, title, votes, releaseDate, overview } = props;
   return (
     <Styled.Container>
       <Poster path={posterPath} />

@@ -66,11 +66,12 @@ const Styled = {
     flex-direction: row;
     height: 100%;
     justify-content: center;
+    padding: 0 20px;
     align-items: center;
   `,
 
   Column: styled.View`
-    width: 50%;
+    width: 65%;
     margin-left: 15px;
   `,
 };

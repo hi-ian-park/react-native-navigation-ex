@@ -1,78 +1,68 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  InteractionManager,
-  RefreshControl,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Dimensions } from "react-native";
 import Swiper from "react-native-swiper";
+import useSWR from "swr";
 import styled from "styled-components/native";
 import Slide from "../components/Slide";
 import VCard from "../components/VCard";
 import HCard from "../components/HCard";
+import { fetcher, nowPlayingUrl, trendingUrl, upComingUrl } from "../api";
 
-const BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = "d8e560fb14d2560d6f578c07fee2ac0e";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
-  navigation: { navigate },
-}) => {
+const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [nowPlaying, setNowPlaying] = useState([]);
-  const [upComing, setUpComing] = useState([]);
-  const [trending, setTrending] = useState([]);
 
-  const getTrending = async () => {
-    const response = await fetch(
-      `${BASE_URL}/trending/movie/week?api_key=${API_KEY}`
+  const { data: trending, error: trendingError } = useSWR(trendingUrl, fetcher);
+  const { data: nowPlaying, error: playingError } = useSWR(
+    nowPlayingUrl,
+    fetcher
+  );
+  const { data: upComing, error: upComingError } = useSWR(upComingUrl, fetcher);
+  const isLoading = !trending || !nowPlaying || !upComing;
+  const onRefresh = async () => {};
+
+  const renderCard = {
+    v: ({ item }) => (
+      <VCard
+        posterPath={item.poster_path}
+        title={item.original_title}
+        votes={item.vote_average}
+        releaseDate={item.release_date}
+        overview={item.overview}
+      />
+    ),
+
+    h: ({ item }) => (
+      <HCard
+        posterPath={item.poster_path}
+        title={item.original_title}
+        votes={item.vote_average}
+        releaseDate={item.release_date}
+        overview={item.overview}
+      />
+    ),
+  };
+
+  const separator = {
+    v: styled.View`
+      width: 20px;
+    `,
+    h: styled.View`
+      height: 15px;
+    `,
+  };
+
+  const movieKeyExtractor = (item) => item.id;
+
+  if (isLoading)
+    return (
+      <Styled.Loader>
+        <ActivityIndicator />
+      </Styled.Loader>
     );
-    const { results } = await response.json();
-
-    setTrending(results);
-  };
-
-  const getUpcoming = async () => {
-    const response = await fetch(
-      `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko-KR&region=kr`
-    );
-    const { results } = await response.json();
-    setUpComing(results);
-  };
-
-  const getNowPlaying = async () => {
-    const response = await fetch(
-      `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&region=kr`
-    );
-    const { results } = await response.json();
-    setNowPlaying(results);
-  };
-
-  const getData = async () => {
-    await Promise.all([getTrending(), getNowPlaying(), getUpcoming()]);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await getData();
-    setRefreshing(false);
-  };
-
-  return loading ? (
-    <Styled.Loader>
-      <ActivityIndicator />
-    </Styled.Loader>
-  ) : (
+  return (
     <Styled.SafeAreaView>
       <Styled.Container
         refreshing={refreshing}
@@ -92,7 +82,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
               autoplayTimeout={3.5}
               loop
             >
-              {nowPlaying.map((movie) => (
+              {nowPlaying?.map((movie) => (
                 <Slide
                   key={movie.id}
                   backdropPath={movie.backdrop_path}
@@ -107,36 +97,21 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
               <Styled.ListTitle>Trending Movies</Styled.ListTitle>
               <Styled.TrendingScroll
                 data={trending}
-                keyExtractor={(item) => item.id}
+                keyExtractor={movieKeyExtractor}
                 contentContainerStyle={{ paddingHorizontal: 20 }}
-                renderItem={({ item }) => (
-                  <VCard
-                    posterPath={item.poster_path}
-                    title={item.original_title}
-                    votes={item.vote_average}
-                  />
-                )}
+                renderItem={renderCard.v}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
+                ItemSeparatorComponent={separator.v}
               />
             </Styled.ListContainer>
             <Styled.ListTitle>Coming Soon</Styled.ListTitle>
           </>
         }
-        keyExtractor={(item) => item.id}
+        keyExtractor={movieKeyExtractor}
         data={upComing}
-        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-        renderItem={({ item }) => (
-          <HCard
-            key={item.id}
-            posterPath={item.poster_path}
-            title={item.original_title}
-            votes={item.vote_average}
-            releaseDate={item.release_date}
-            overview={item.overview}
-          />
-        )}
+        ItemSeparatorComponent={separator.h}
+        renderItem={renderCard.h}
       />
     </Styled.SafeAreaView>
   );
