@@ -108,6 +108,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
               <Styled.TrendingScroll
                 data={trending}
                 keyExtractor={(item) => item.id}
+                contentContainerStyle={{ paddingHorizontal: 20 }}
                 renderItem={({ item }) => (
                   <VCard
                     posterPath={item.poster_path}
@@ -120,14 +121,12 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
                 ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
               />
             </Styled.ListContainer>
-            <Styled.ListContainer>
-              <Styled.ListTitle>Coming Soon</Styled.ListTitle>
-            </Styled.ListContainer>
+            <Styled.ListTitle>Coming Soon</Styled.ListTitle>
           </>
         }
         keyExtractor={(item) => item.id}
         data={upComing}
-        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
         renderItem={({ item }) => (
           <HCard
             key={item.id}
@@ -144,7 +143,9 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
 };
 
 const Styled = {
-  SafeAreaView: styled.SafeAreaView``,
+  SafeAreaView: styled.SafeAreaView`
+    flex: 1;
+  `,
 
   Container: styled.FlatList``,
 
@@ -155,7 +156,6 @@ const Styled = {
   `,
 
   ListContainer: styled.View`
-    padding: 0 20px;
     margin-bottom: 40px;
   `,
 
@@ -164,6 +164,7 @@ const Styled = {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
+    padding: 0 20px;
   `,
 
   TrendingScroll: styled.FlatList``,

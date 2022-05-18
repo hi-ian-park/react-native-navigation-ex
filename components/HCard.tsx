@@ -18,7 +18,7 @@ const HCard: React.FC<HCardProps> = ({
   overview,
 }) => {
   return (
-    <Styled.HorizontalMovie>
+    <Styled.Container>
       <Poster path={posterPath} />
       <Styled.HorizontalColumn>
         <Styled.Title>{title}</Styled.Title>
@@ -33,19 +33,19 @@ const HCard: React.FC<HCardProps> = ({
           </Styled.Date>
         )}
         <Styled.OverView>
-          {overview.length > 140 ? overview.slice(0, 140) : overview}
+          {overview.length > 130 ? overview.slice(0, 130) : overview}
         </Styled.OverView>
       </Styled.HorizontalColumn>
-    </Styled.HorizontalMovie>
+    </Styled.Container>
   );
 };
 
 export default HCard;
 
 const Styled = {
-  HorizontalMovie: styled.View`
+  Container: styled.View`
     flex-direction: row;
-    margin-bottom: 10px;
+    padding-left: 20px;
   `,
 
   HorizontalColumn: styled.View`
@@ -68,6 +68,6 @@ const Styled = {
 
   OverView: styled.Text`
     color: ${({ theme }) => theme.text};
-    width: 70%;
+    width: 60%;
   `,
 };
