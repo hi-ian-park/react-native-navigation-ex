@@ -14,22 +14,30 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
   const [refreshing, setRefreshing] = useState(false);
 
-  const { data: trendingData, error: trendingError } = useSWR(
-    apiUrl.trendingUrl,
-    fetcher
-  );
-  const { data: nowPlayingData, error: playingError } = useSWR(
-    apiUrl.nowPlayingUrl,
-    fetcher
-  );
-  const { data: upComingData, error: upComingError } = useSWR(
-    apiUrl.upComingUrl,
-    fetcher
-  );
+  const {
+    data: trendingData,
+    error: trendingError,
+    mutate: mutateTrending,
+  } = useSWR(apiUrl.trendingUrl, fetcher);
+  const {
+    data: nowPlayingData,
+    error: playingError,
+    mutate: mutateNowPlaying,
+  } = useSWR(apiUrl.nowPlayingUrl, fetcher);
+  const {
+    data: upComingData,
+    error: upComingError,
+    mutate: mutateUpComing,
+  } = useSWR(apiUrl.upComingUrl, fetcher);
 
   const isLoading = !trendingData || !nowPlayingData || !upComingData;
   const isError = trendingError || playingError || upComingError;
-  const onRefresh = async () => {};
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([mutateTrending(), mutateNowPlaying(), mutateUpComing()]);
+    setRefreshing(false);
+  };
 
   const renderCard = {
     v: ({ item }) => (
