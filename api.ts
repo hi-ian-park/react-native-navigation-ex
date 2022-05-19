@@ -33,8 +33,14 @@ export const fetcher = async (url: string) => {
   return data;
 };
 
-const trendingUrl = `${BASE_URL}/trending/movie/week?api_key=${API_KEY}`;
-const upComingUrl = `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko-KR&region=kr`;
-const nowPlayingUrl = `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&region=kr`;
+export const movieUrl = {
+  trending: `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ko-KR&region=kr`,
+  upComing: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko-KR&region=kr`,
+  nowPlaying: `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&region=kr`,
+};
 
-export const apiUrl = { trendingUrl, upComingUrl, nowPlayingUrl };
+export const tvUrl = {
+  trending: `${BASE_URL}/trending/tv/week?api_key=${API_KEY}`,
+  airingToday: `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=ko-KR&region=kr`,
+  topRated: `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko-KR&region=kr`,
+};

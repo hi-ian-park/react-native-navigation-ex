@@ -1,13 +1,14 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, View } from "react-native";
+import { Dimensions, FlatList, View } from "react-native";
 import Swiper from "react-native-swiper";
 import useSWR from "swr";
 import styled from "styled-components/native";
 import Slide from "../components/Slide";
 import VCard from "../components/VCard";
 import HCard from "../components/HCard";
-import { fetcher, apiUrl, MovieResponse, Movie } from "../api";
+import Loader from "../components/Loader";
+import { fetcher, movieUrl, MovieResponse, Movie } from "../api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -18,17 +19,17 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
     data: trendingData,
     error: trendingError,
     mutate: mutateTrending,
-  } = useSWR<MovieResponse>(apiUrl.trendingUrl, fetcher);
+  } = useSWR<MovieResponse>(movieUrl.trending, fetcher);
   const {
     data: nowPlayingData,
     error: playingError,
     mutate: mutateNowPlaying,
-  } = useSWR<MovieResponse>(apiUrl.nowPlayingUrl, fetcher);
+  } = useSWR<MovieResponse>(movieUrl.nowPlaying, fetcher);
   const {
     data: upComingData,
     error: upComingError,
     mutate: mutateUpComing,
-  } = useSWR<MovieResponse>(apiUrl.upComingUrl, fetcher);
+  } = useSWR<MovieResponse>(movieUrl.upComing, fetcher);
 
   const isLoading = !trendingData || !nowPlayingData || !upComingData;
   const isError = trendingError || playingError || upComingError;
@@ -59,19 +60,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
     />
   );
 
-  const separatorV = styled.View`
-    width: 20px;
-  `;
-  const separatorH = styled.View`
-    height: 15px;
-  `;
-
-  if (isLoading)
-    return (
-      <Styled.Loader>
-        <ActivityIndicator />
-      </Styled.Loader>
-    );
+  if (isLoading) return <Loader />;
 
   if (isError)
     return (
@@ -122,7 +111,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
                     contentContainerStyle={{ paddingHorizontal: 20 }}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={separatorV}
+                    ItemSeparatorComponent={Styled.separatorV}
                   />
                 )}
               </Styled.ListContainer>
@@ -131,7 +120,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
           }
           data={upComingData.results}
           keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={separatorH}
+          ItemSeparatorComponent={Styled.separatorH}
           renderItem={renderHCard}
         />
       )}
@@ -142,12 +131,6 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
 const Styled = {
   SafeAreaView: styled.SafeAreaView`
     flex: 1;
-  `,
-
-  Loader: styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content: center;
   `,
 
   ListContainer: styled.View`
@@ -163,6 +146,13 @@ const Styled = {
   `,
 
   ComingSoonScroll: styled.FlatList``,
+
+  separatorV: styled.View`
+    width: 20px;
+  `,
+  separatorH: styled.View`
+    height: 15px;
+  `,
 };
 
 export default Movies;
