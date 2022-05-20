@@ -28,8 +28,9 @@ export interface MovieResponse extends BaseResponse {
   results: Movie[];
 }
 
-export const fetcher = async (url: string) => {
-  const data = await (await fetch(url)).json();
+export const fetcher = async (url: string, query: string = "") => {
+  const fetchUrl = query ? url + query : url;
+  const data = await (await fetch(fetchUrl)).json();
   return data;
 };
 
@@ -37,6 +38,7 @@ export const movieUrl = {
   trending: `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ko-KR&region=kr`,
   upComing: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko-KR&region=kr`,
   nowPlaying: `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&region=kr`,
+  search: `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&region=kr&query=`,
 };
 
 export const tvUrl = {

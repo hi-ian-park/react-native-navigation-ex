@@ -8,5 +8,7 @@ declare module "styled-components" {
     background: string;
     tint: string;
     inactive: string;
+    textInputBackground: string;
+    textInputText: string;
   }
 }
