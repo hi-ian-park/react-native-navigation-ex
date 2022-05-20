@@ -8,6 +8,7 @@ import Slide from "../components/Slide";
 import VCard from "../components/VCard";
 import HCard from "../components/HCard";
 import Loader from "../components/Loader";
+import HCardList from "../components/HCardList";
 import { fetcher, movieUrl, MovieResponse, Movie } from "../api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -101,20 +102,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = ({}) => {
                   />
                 ))}
               </Swiper>
-              <Styled.ListContainer>
-                <Styled.ListTitle>Trending Movies</Styled.ListTitle>
-                {trendingData && (
-                  <FlatList
-                    data={trendingData.results}
-                    renderItem={renderVCard}
-                    keyExtractor={(item) => item.id.toString()}
-                    contentContainerStyle={{ paddingHorizontal: 20 }}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={Styled.separatorV}
-                  />
-                )}
-              </Styled.ListContainer>
+              <HCardList title="Trending" data={trendingData.results} />
               <Styled.ListTitle>Coming Soon</Styled.ListTitle>
             </>
           }
@@ -133,9 +121,7 @@ const Styled = {
     flex: 1;
   `,
 
-  ListContainer: styled.View`
-    margin-bottom: 40px;
-  `,
+  ListContainer: styled.View``,
 
   ListTitle: styled.Text`
     color: ${({ theme }) => theme.text};
