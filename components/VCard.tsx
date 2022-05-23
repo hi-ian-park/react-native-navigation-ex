@@ -1,6 +1,7 @@
 import React from 'react';
-import Poster from './Poster';
 import styled from 'styled-components/native';
+
+import Poster from './Poster';
 import Votes from './Votes';
 
 interface VCardProps {

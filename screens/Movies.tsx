@@ -2,14 +2,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Dimensions, FlatList, View } from 'react-native';
 import Swiper from 'react-native-swiper';
-import useSWR from 'swr';
 import styled from 'styled-components/native';
+import useSWR from 'swr';
+
+import { Movie, MovieResponse, fetcher, movieUrl } from '../api';
+import HCard from '../components/HCard';
+import HCardList from '../components/HCardList';
+import Loader from '../components/Loader';
 import Slide from '../components/Slide';
 import VCard from '../components/VCard';
-import HCard from '../components/HCard';
-import Loader from '../components/Loader';
-import HCardList from '../components/HCardList';
-import { fetcher, movieUrl, MovieResponse, Movie } from '../api';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -65,7 +66,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({}) => {
 
   if (isError)
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>Some Error!</View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        Some Error!
+      </View>
     );
   return (
     <Styled.SafeAreaView>

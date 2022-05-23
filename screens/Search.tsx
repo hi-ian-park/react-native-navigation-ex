@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components/native';
-import { Alert, Text } from 'react-native';
 import useSWR from 'swr';
+
 import { fetcher, movieUrl } from '../api';
 
 const Search = () => {
   const [query, setQuery] = useState('');
   const onChangeText = (payload: string) => setQuery(payload);
-  const { data, mutate: mutateMovieSearch } = useSWR([movieUrl.search, query], fetcher, {
-    revalidateOnMount: false,
-  });
+  const { data, mutate: mutateMovieSearch } = useSWR(
+    [movieUrl.search, query],
+    fetcher,
+    {
+      revalidateOnMount: false,
+    },
+  );
 
   console.log(data);
   const onSubmit = () => {

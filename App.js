@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import AppLoading from 'expo-app-loading';
-import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
-import Root from './navigation/Root';
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
+import React, { useState } from 'react';
 import { useColorScheme } from 'react-native';
-import { theme } from './styles/theme';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
+import Root from './navigation/Root';
+import { theme } from './styles/theme';
 
 export default function App() {
   const [ready, setReady] = useState(false);

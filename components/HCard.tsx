@@ -1,6 +1,7 @@
 import React from 'react';
-import Poster from './Poster';
 import styled from 'styled-components/native';
+
+import Poster from './Poster';
 
 interface HCardProps {
   posterPath: string;
@@ -10,7 +11,13 @@ interface HCardProps {
   overview: string;
 }
 
-const HCard: React.FC<HCardProps> = ({ posterPath, title, releaseDate, votes, overview }) => {
+const HCard: React.FC<HCardProps> = ({
+  posterPath,
+  title,
+  releaseDate,
+  votes,
+  overview,
+}) => {
   return (
     <Styled.Container>
       <Poster path={posterPath} />

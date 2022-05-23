@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
-import styled from 'styled-components/native';
 import { BlurView } from 'expo-blur';
+import React from 'react';
+import { StyleSheet, View, useColorScheme } from 'react-native';
+import styled from 'styled-components/native';
+
 import { makeImgPath } from '../utils';
 import Poster from './Poster';
 import Votes from './Votes';
@@ -28,7 +29,11 @@ const Slide: React.FC<SlideProps> = ({
         source={{ uri: makeImgPath(backdropPath) }}
         style={StyleSheet.absoluteFill}
       />
-      <BlurView tint={userTheme || 'light'} intensity={80} style={StyleSheet.absoluteFill}>
+      <BlurView
+        tint={userTheme || 'light'}
+        intensity={80}
+        style={StyleSheet.absoluteFill}
+      >
         <Styled.Wrapper>
           <Poster path={posterPath} />
           <Styled.Column>

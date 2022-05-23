@@ -1,5 +1,10 @@
 module.exports = {
-  singleQuote: true,
+  printWidth: 80,
+  tabWidth: 2,
   trailingComma: 'all',
-  printWidth: 100,
+  singleQuote: true,
+  semi: true,
+  importOrder: ['^@core/(.*)$', '^@server/(.*)$', '^@ui/(.*)$', '^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
 };
