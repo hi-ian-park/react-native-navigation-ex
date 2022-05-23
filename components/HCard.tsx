@@ -1,6 +1,6 @@
-import React from "react";
-import Poster from "./Poster";
-import styled from "styled-components/native";
+import React from 'react';
+import Poster from './Poster';
+import styled from 'styled-components/native';
 
 interface HCardProps {
   posterPath: string;
@@ -10,13 +10,7 @@ interface HCardProps {
   overview: string;
 }
 
-const HCard: React.FC<HCardProps> = ({
-  posterPath,
-  title,
-  releaseDate,
-  votes,
-  overview,
-}) => {
+const HCard: React.FC<HCardProps> = ({ posterPath, title, releaseDate, votes, overview }) => {
   return (
     <Styled.Container>
       <Poster path={posterPath} />
@@ -25,10 +19,10 @@ const HCard: React.FC<HCardProps> = ({
         {releaseDate && (
           <Styled.Date>
             Coming: &nbsp;
-            {new Date(releaseDate).toLocaleDateString("ko", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
+            {new Date(releaseDate).toLocaleDateString('ko', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
             })}
           </Styled.Date>
         )}

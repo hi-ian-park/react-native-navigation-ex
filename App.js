@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import AppLoading from "expo-app-loading";
-import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
-import Root from "./navigation/Root";
-import { useColorScheme } from "react-native";
-import { theme } from "./styles/theme";
-import { ThemeProvider } from "styled-components";
-import { SWRConfig } from "swr";
+import React, { useState } from 'react';
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
+import { NavigationContainer } from '@react-navigation/native';
+import Root from './navigation/Root';
+import { useColorScheme } from 'react-native';
+import { theme } from './styles/theme';
+import { ThemeProvider } from 'styled-components';
+import { SWRConfig } from 'swr';
 
 export default function App() {
   const [ready, setReady] = useState(false);
@@ -18,13 +18,7 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   if (!ready)
-    return (
-      <AppLoading
-        startAsync={startLoading}
-        onFinish={onFinish}
-        onError={console.warn}
-      />
-    );
+    return <AppLoading startAsync={startLoading} onFinish={onFinish} onError={console.warn} />;
 
   return (
     <SWRConfig

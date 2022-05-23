@@ -1,5 +1,7 @@
-const API_KEY = "d8e560fb14d2560d6f578c07fee2ac0e";
-const BASE_URL = "https://api.themoviedb.org/3";
+import axios from 'axios';
+
+const API_KEY = 'd8e560fb14d2560d6f578c07fee2ac0e';
+const BASE_URL = 'https://api.themoviedb.org/3';
 
 interface BaseResponse {
   page: number;
@@ -28,9 +30,8 @@ export interface MovieResponse extends BaseResponse {
   results: Movie[];
 }
 
-export const fetcher = async (url: string, query: string = "") => {
-  const fetchUrl = query ? url + query : url;
-  const data = await (await fetch(fetchUrl)).json();
+export const fetcher = async (url: string) => {
+  const { data } = await axios.get(url);
   return data;
 };
 

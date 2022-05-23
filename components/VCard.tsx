@@ -1,7 +1,7 @@
-import React from "react";
-import Poster from "./Poster";
-import styled from "styled-components/native";
-import Votes from "./Votes";
+import React from 'react';
+import Poster from './Poster';
+import styled from 'styled-components/native';
+import Votes from './Votes';
 
 interface VCardProps {
   posterPath: string;
@@ -18,7 +18,7 @@ const VCard: React.FC<VCardProps> = (props) => {
       <Poster path={posterPath} />
       <Styled.Title>
         {title.slice(0, 13)}
-        {title.length > 13 && "..."}
+        {title.length > 13 && '...'}
       </Styled.Title>
       {votes && <Votes votes={votes} />}
     </Styled.Container>

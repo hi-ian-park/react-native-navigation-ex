@@ -1,16 +1,16 @@
-import React from "react";
-import { useColorScheme } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Movies from "../screens/Movies";
-import Search from "../screens/Search";
-import Tv from "../screens/Tv";
-import { Ionicons } from "@expo/vector-icons";
-import { theme } from "../colors";
+import React from 'react';
+import { useColorScheme } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Movies from '../screens/Movies';
+import Search from '../screens/Search';
+import Tv from '../screens/Tv';
+import { Ionicons } from '@expo/vector-icons';
+import { theme } from '../colors';
 
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
-  const colorScheme = useColorScheme() || "light";
+  const colorScheme = useColorScheme() || 'light';
   const palette = theme[colorScheme];
   return (
     <Tab.Navigator
@@ -33,7 +33,7 @@ const Tabs = () => {
         tabBarLabelStyle: {
           paddingTop: -5,
           fontSize: 12,
-          fontWeight: "600",
+          fontWeight: '600',
         },
       }}
     >
@@ -50,9 +50,7 @@ const Tabs = () => {
         name="TV"
         component={Tv}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="tv-outline" color={color} size={size} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="tv-outline" color={color} size={size} />,
         }}
       ></Tab.Screen>
       <Tab.Screen

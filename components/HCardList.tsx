@@ -1,8 +1,8 @@
-import React from "react";
-import { FlatList } from "react-native";
-import styled from "styled-components/native";
-import { Movie } from "../api";
-import VCard from "./VCard";
+import React from 'react';
+import { FlatList } from 'react-native';
+import styled from 'styled-components/native';
+import { Movie } from '../api';
+import VCard from './VCard';
 
 interface HListProps {
   title: string;

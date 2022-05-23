@@ -1,21 +1,15 @@
-import React, { useState } from "react";
-import { SafeAreaView, RefreshControl } from "react-native";
-import useSWR from "swr";
-import styled from "styled-components/native";
-import { fetcher, tvUrl } from "../api";
-import HCardList from "../components/HCardList";
-import Loader from "../components/Loader";
+import React, { useState } from 'react';
+import { fetcher, tvUrl } from '../api';
+import HCardList from '../components/HCardList';
+import { SafeAreaView, RefreshControl } from 'react-native';
+import useSWR from 'swr';
+import Loader from '../components/Loader';
+import styled from 'styled-components/native';
 
 const Tv = () => {
   const [refreshing, setRefreshing] = useState(false);
-  const { data: trendingData, mutate: mutateTrending } = useSWR(
-    tvUrl.trending,
-    fetcher
-  );
-  const { data: todayData, mutate: mutateToday } = useSWR(
-    tvUrl.airingToday,
-    fetcher
-  );
+  const { data: trendingData, mutate: mutateTrending } = useSWR(tvUrl.trending, fetcher);
+  const { data: todayData, mutate: mutateToday } = useSWR(tvUrl.airingToday, fetcher);
   const { data: topData, mutate: mutateTop } = useSWR(tvUrl.topRated, fetcher);
   const isLoading = !trendingData || !todayData || !topData;
 
@@ -30,10 +24,7 @@ const Tv = () => {
     <SafeAreaView>
       <Styled.Container
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          ></RefreshControl>
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>
         }
       >
         <HCardList title="Trending TV" data={trendingData.results} />
