@@ -1,20 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Dimensions, FlatList, View } from 'react-native';
+// eslint-disable-next-line import/default
 import Swiper from 'react-native-swiper';
+// FIXME: 이슈 https://github.com/leecade/react-native-swiper/issues/1183
 import styled from 'styled-components/native';
 import useSWR from 'swr';
 
-import { Movie, MovieResponse, fetcher, movieUrl } from '../api';
+import { MovieResponse, fetcher, movieUrl } from '../api';
 import HCard from '../components/HCard';
 import HCardList from '../components/HCardList';
 import Loader from '../components/Loader';
 import Slide from '../components/Slide';
-import VCard from '../components/VCard';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({}) => {
+const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const {
@@ -41,26 +42,6 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({}) => {
     await Promise.all([mutateTrending(), mutateNowPlaying(), mutateUpComing()]);
     setRefreshing(false);
   };
-
-  const renderVCard = ({ item }: { item: Movie }) => (
-    <VCard
-      posterPath={item.poster_path || ''}
-      title={item.original_title}
-      votes={item.vote_average}
-      releaseDate={item.release_date}
-      overview={item.overview}
-    />
-  );
-
-  const renderHCard = ({ item }: { item: Movie }) => (
-    <HCard
-      posterPath={item.poster_path || ''}
-      title={item.original_title}
-      votes={item.vote_average}
-      releaseDate={item.release_date}
-      overview={item.overview}
-    />
-  );
 
   if (isLoading) return <Loader />;
 
@@ -103,14 +84,25 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({}) => {
                   />
                 ))}
               </Swiper>
-              <HCardList title="Trending" data={trendingData.results} />
+              {trendingData && (
+                <HCardList title="Trending" data={trendingData.results} />
+              )}
+
               <Styled.ListTitle>Coming Soon</Styled.ListTitle>
             </>
           }
           data={upComingData.results}
           keyExtractor={(item) => item.id.toString()}
           ItemSeparatorComponent={Styled.separatorH}
-          renderItem={renderHCard}
+          renderItem={({ item }) => (
+            <HCard
+              posterPath={item.poster_path || ''}
+              title={item.original_title}
+              votes={item.vote_average}
+              releaseDate={item.release_date}
+              overview={item.overview}
+            />
+          )}
         />
       )}
     </Styled.SafeAreaView>

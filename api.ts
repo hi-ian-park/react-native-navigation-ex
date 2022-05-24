@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_KEY = 'd8e560fb14d2560d6f578c07fee2ac0e';
 const BASE_URL = 'https://api.themoviedb.org/3';
+const API_KEY = 'd8e560fb14d2560d6f578c07fee2ac0e';
 
 interface BaseResponse {
   page: number;
@@ -30,8 +30,8 @@ export interface MovieResponse extends BaseResponse {
   results: Movie[];
 }
 
-export const fetcher = async (url: string) => {
-  const { data } = await axios.get(url);
+export const fetcher = async (url: string, param = '') => {
+  const { data } = await axios.get(url + param);
   return data;
 };
 
