@@ -31,6 +31,7 @@ export interface MovieResponse extends BaseResponse {
 }
 
 export const fetcher = async (url: string, param = '') => {
+  console.log(param);
   const { data } = await axios.get(url + param);
   return data;
 };
@@ -46,4 +47,5 @@ export const tvUrl = {
   trending: `${BASE_URL}/trending/tv/week?api_key=${API_KEY}`,
   airingToday: `${BASE_URL}/tv/airing_today?api_key=${API_KEY}&language=ko-KR&region=kr`,
   topRated: `${BASE_URL}/tv/top_rated?api_key=${API_KEY}&language=ko-KR&region=kr`,
+  search: `${BASE_URL}/search/tv?api_key=${API_KEY}&language=ko-KR&region=kr&query=`,
 };
