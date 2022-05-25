@@ -97,7 +97,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
           renderItem={({ item }) => (
             <HCard
               posterPath={item.poster_path || ''}
-              title={item.original_title}
+              originalTitle={item.original_title}
               votes={item.vote_average}
               releaseDate={item.release_date}
               overview={item.overview}

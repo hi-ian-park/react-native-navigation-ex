@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import styled from 'styled-components/native';
 
@@ -6,20 +7,27 @@ import Votes from './Votes';
 
 interface VCardProps {
   posterPath: string;
-  title: string;
+  originalTitle: string;
   votes?: number;
   releaseDate?: string;
   overview?: string;
 }
 
 const VCard: React.FC<VCardProps> = (props) => {
-  const { posterPath, title, votes, releaseDate, overview } = props;
+  const { posterPath, originalTitle, votes, releaseDate, overview } = props;
+  const navigation = useNavigation();
+  const goToDetail = () => {
+    navigation.navigate('Stack', {
+      screen: 'Detail',
+      params: { originalTitle },
+    });
+  };
   return (
-    <Styled.Container>
+    <Styled.Container onPress={goToDetail}>
       <Poster path={posterPath} />
       <Styled.Title>
-        {title.slice(0, 13)}
-        {title.length > 13 && '...'}
+        {originalTitle.slice(0, 13)}
+        {originalTitle.length > 13 && '...'}
       </Styled.Title>
       {votes && <Votes votes={votes} />}
     </Styled.Container>
@@ -27,7 +35,7 @@ const VCard: React.FC<VCardProps> = (props) => {
 };
 
 const Styled = {
-  Container: styled.View`
+  Container: styled.TouchableOpacity`
     align-items: center;
   `,
   Title: styled.Text`

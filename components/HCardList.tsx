@@ -21,7 +21,7 @@ const HCardList: React.FC<HListProps> = ({ title, data }) => {
         renderItem={({ item }) => (
           <VCard
             posterPath={item.poster_path}
-            title={item.original_title || item.original_name}
+            originalTitle={item.original_title || item.original_name}
             votes={item.votes_average}
           />
         )}
