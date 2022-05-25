@@ -3,8 +3,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, useColorScheme } from 'react-native';
 import styled from 'styled-components/native';
+import useSWR from 'swr';
 
-import { Movie, TV } from '../api';
+import { Movie, TV, fetcher, movieUrl, tvUrl } from '../api';
 import { theme } from '../colors';
 import Poster from '../components/Poster';
 import { makeImgPath } from '../utils';
@@ -18,12 +19,19 @@ type DetailScreenProps = NativeStackScreenProps<RootStackParamList, 'Detail'>;
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
-  const colorScheme = useColorScheme() || 'light';
   const { setOptions } = navigation;
   const { params } = route;
+  const colorScheme = useColorScheme() || 'light';
+  const isMovie = 'original_title' in params;
+  const fetchUrl = isMovie
+    ? movieUrl.detail(params.id)
+    : tvUrl.detail(params.id);
+
+  const { data } = useSWR(fetchUrl, fetcher);
+
+  console.log(data);
 
   useEffect(() => {
-    const isMovie = 'original_title' in params;
     setOptions({ title: isMovie ? 'Movie' : 'TV Show' });
   }, []);
 
