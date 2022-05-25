@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import styled from 'styled-components/native';
 
+import { Movie, TV } from '../api';
 import Poster from './Poster';
 import Votes from './Votes';
 
@@ -11,15 +12,17 @@ interface VCardProps {
   votes?: number;
   releaseDate?: string;
   overview?: string;
+  rawData: Movie | TV;
 }
 
 const VCard: React.FC<VCardProps> = (props) => {
-  const { posterPath, originalTitle, votes, releaseDate, overview } = props;
+  const { posterPath, originalTitle, votes, releaseDate, overview, rawData } =
+    props;
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate('Stack', {
       screen: 'Detail',
-      params: { originalTitle },
+      params: { ...rawData },
     });
   };
   return (

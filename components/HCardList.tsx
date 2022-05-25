@@ -2,11 +2,12 @@ import React from 'react';
 import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
 
+import { Movie, TV } from '../api';
 import VCard from './VCard';
 
 interface HListProps {
   title: string;
-  data: any[];
+  data: Movie[] | TV[];
 }
 
 const HCardList: React.FC<HListProps> = ({ title, data }) => {
@@ -14,15 +15,16 @@ const HCardList: React.FC<HListProps> = ({ title, data }) => {
     <Styled.ListContainer>
       <Styled.ListTitle>{title}</Styled.ListTitle>
       <FlatList
+        data={data}
         showsHorizontalScrollIndicator={false}
         horizontal
         ItemSeparatorComponent={Styled.separatorV}
-        data={data}
         renderItem={({ item }) => (
           <VCard
-            posterPath={item.poster_path}
+            posterPath={item.poster_path || ''}
             originalTitle={item.original_title || item.original_name}
-            votes={item.votes_average}
+            votes={item.vote_average}
+            rawData={item}
           />
         )}
       />

@@ -4,6 +4,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import styled from 'styled-components/native';
 
+import { Movie } from '../api';
 import { makeImgPath } from '../utils';
 import Poster from './Poster';
 import Votes from './Votes';
@@ -14,6 +15,7 @@ interface SlideProps {
   originalTitle: string;
   voteAverage: number;
   overview: string;
+  rawData: Movie;
 }
 
 const Slide: React.FC<SlideProps> = ({
@@ -22,13 +24,14 @@ const Slide: React.FC<SlideProps> = ({
   originalTitle,
   voteAverage,
   overview,
+  rawData,
 }) => {
   const userTheme = useColorScheme();
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate('Stack', {
       screen: 'Detail',
-      params: { originalTitle },
+      params: { ...rawData },
     });
   };
   return (

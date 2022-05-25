@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import styled from 'styled-components/native';
 
+import { Movie } from '../api';
 import Poster from './Poster';
 
 interface HCardProps {
@@ -10,6 +11,7 @@ interface HCardProps {
   releaseDate?: string;
   votes?: number;
   overview: string;
+  rawData: Movie;
 }
 
 const HCard: React.FC<HCardProps> = ({
@@ -18,12 +20,13 @@ const HCard: React.FC<HCardProps> = ({
   releaseDate,
   votes,
   overview,
+  rawData,
 }) => {
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate('Stack', {
       screen: 'Detail',
-      params: { originalTitle },
+      params: { ...rawData },
     });
   };
   return (
