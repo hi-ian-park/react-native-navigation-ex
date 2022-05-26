@@ -6,7 +6,11 @@ interface VotesProps {
 }
 
 const Votes: React.FC<VotesProps> = ({ votes }) => {
-  return <Styled.Votes>{votes > 0 ? `⭐️ ${votes} / 10` : 'Coming soon'}</Styled.Votes>;
+  return (
+    <Styled.Votes>
+      {votes > 0 ? `⭐️ ${votes} / 10` : 'Coming soon'}
+    </Styled.Votes>
+  );
 };
 
 export default Votes;
