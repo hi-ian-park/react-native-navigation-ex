@@ -48,7 +48,6 @@ export interface MovieResponse extends BaseResponse {
 }
 
 export const fetcher = async (url: string, param = '') => {
-  console.log(param);
   const { data } = await axios.get(url + param);
   return data;
 };

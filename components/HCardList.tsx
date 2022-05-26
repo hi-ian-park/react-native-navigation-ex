@@ -11,6 +11,17 @@ interface HListProps {
 }
 
 const HCardList: React.FC<HListProps> = ({ title, data }) => {
+  const renderItem = ({ item }: { item: Movie | TV }) => {
+    return (
+      <VCard
+        posterPath={item.poster_path || ''}
+        originalTitle={item.original_title || item.original_name}
+        votes={item.vote_average}
+        rawData={item}
+      />
+    );
+  };
+
   return (
     <Styled.ListContainer>
       <Styled.ListTitle>{title}</Styled.ListTitle>
@@ -19,14 +30,7 @@ const HCardList: React.FC<HListProps> = ({ title, data }) => {
         showsHorizontalScrollIndicator={false}
         horizontal
         ItemSeparatorComponent={Styled.separatorV}
-        renderItem={({ item }) => (
-          <VCard
-            posterPath={item.poster_path || ''}
-            originalTitle={item.original_title || item.original_name}
-            votes={item.vote_average}
-            rawData={item}
-          />
-        )}
+        renderItem={renderItem}
       />
     </Styled.ListContainer>
   );

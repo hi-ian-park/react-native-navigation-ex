@@ -60,6 +60,7 @@ const Tabs = () => {
         name="Search"
         component={Search}
         options={{
+          unmountOnBlur: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="search-outline" color={color} size={size} />
           ),

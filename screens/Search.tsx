@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components/native';
 import useSWR from 'swr';
 
@@ -7,21 +7,32 @@ import HCardList from '../components/HCardList';
 import Loader from '../components/Loader';
 
 const Search = () => {
-  const [userInput, setUserInput] = useState('');
-  const [query, setQuery] = useState('');
-  const onChangeText = (payload: string) => setUserInput(payload);
-  const { data: movieData, isValidating: moviesLoading } =
-    useSWR<MovieResponse>([movieUrl.search, query], fetcher);
-  const { data: tvData, isValidating: tvLoading } = useSWR<MovieResponse>(
-    [tvUrl.search, query],
+  const queryRef = useRef('');
+  const [shouldFetch, setShouldFetch] = useState(false);
+  const onChangeText = (searchText: string) => (queryRef.current = searchText);
+  const {
+    data: movieData,
+    isValidating: moviesLoading,
+    mutate: revalidateMovie,
+  } = useSWR<MovieResponse>(
+    shouldFetch ? [movieUrl.search, queryRef.current] : null,
+    fetcher,
+  );
+
+  const {
+    data: tvData,
+    isValidating: tvLoading,
+    mutate: revalidateTv,
+  } = useSWR<MovieResponse>(
+    shouldFetch ? [tvUrl.search, queryRef.current] : null,
     fetcher,
   );
 
   const isLoading = moviesLoading || tvLoading;
 
-  const onSubmit = () => {
-    if (userInput === '') return;
-    setQuery(userInput);
+  const onSubmit = async () => {
+    queryRef.current ? setShouldFetch(true) : setShouldFetch(false);
+    await Promise.all([revalidateMovie(), revalidateTv()]);
   };
 
   if (isLoading) return <Loader />;
