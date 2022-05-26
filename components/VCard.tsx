@@ -16,8 +16,9 @@ interface VCardProps {
 }
 
 const VCard: React.FC<VCardProps> = (props) => {
-  const { posterPath, originalTitle, votes, releaseDate, overview, rawData } =
-    props;
+  const { posterPath, originalTitle, votes, rawData } = props;
+  // TODO: useNavigation type annotating 확인
+  // https://reactnavigation.org/docs/typescript/#annotating-usenavigation
   const navigation = useNavigation();
   const goToDetail = () => {
     navigation.navigate('Stack', {
@@ -25,6 +26,7 @@ const VCard: React.FC<VCardProps> = (props) => {
       params: { ...rawData },
     });
   };
+
   return (
     <Styled.Container onPress={goToDetail}>
       <Poster path={posterPath} />
@@ -32,7 +34,7 @@ const VCard: React.FC<VCardProps> = (props) => {
         {originalTitle.slice(0, 13)}
         {originalTitle.length > 13 && '...'}
       </Styled.Title>
-      {votes && <Votes votes={votes} />}
+      {votes !== undefined && <Votes votes={votes} />}
     </Styled.Container>
   );
 };
@@ -41,6 +43,7 @@ const Styled = {
   Container: styled.TouchableOpacity`
     align-items: center;
   `,
+
   Title: styled.Text`
     color: ${({ theme }) => theme.text};
     font-weight: 600;
