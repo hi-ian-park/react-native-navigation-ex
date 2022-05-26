@@ -1,5 +1,7 @@
+import { Ionicons } from '@expo/vector-icons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as WebBrowser from 'expo-web-browser';
 import React, { useEffect } from 'react';
 import { Dimensions, StyleSheet, useColorScheme } from 'react-native';
 import styled from 'styled-components/native';
@@ -7,6 +9,7 @@ import useSWR from 'swr';
 
 import { Movie, TV, fetcher, movieUrl, tvUrl } from '../api';
 import { theme } from '../colors';
+import Loader from '../components/Loader';
 import Poster from '../components/Poster';
 import { makeImgPath } from '../utils';
 
@@ -27,14 +30,16 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
     ? movieUrl.detail(params.id)
     : tvUrl.detail(params.id);
 
-  const { data } = useSWR(fetchUrl, fetcher);
-
-  console.log(data);
+  const { data, isValidating } = useSWR(fetchUrl, fetcher);
 
   useEffect(() => {
     setOptions({ title: isMovie ? 'Movie' : 'TV Show' });
   }, []);
 
+  const openYouTube = async (videoId: string) => {
+    const baseUrl = `http://m.youtube.com/watch?v=${videoId}`;
+    await WebBrowser.openBrowserAsync(baseUrl);
+  };
   return (
     <Styled.Container>
       <Styled.Header>
@@ -53,7 +58,23 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
           </Styled.Title>
         </Styled.Column>
       </Styled.Header>
-      <Styled.Overview>{params.overview}</Styled.Overview>
+      <Styled.DetailContainer>
+        <Styled.Overview>{params.overview}</Styled.Overview>
+        {isValidating && <Loader />}
+        {data?.videos?.results?.map((video) => (
+          <Styled.VideoBtn
+            key={video.key}
+            onPress={() => openYouTube(video.key)}
+          >
+            <Ionicons
+              name="logo-youtube"
+              color={theme[colorScheme].text}
+              size={24}
+            />
+            <Styled.BtnText>{video.name}</Styled.BtnText>
+          </Styled.VideoBtn>
+        ))}
+      </Styled.DetailContainer>
     </Styled.Container>
   );
 };
@@ -90,6 +111,22 @@ const Styled = {
 
   Overview: styled.Text`
     color: ${({ theme }) => theme.text};
+    margin: 20px 0;
+  `,
+
+  DetailContainer: styled.View`
     padding: 0 20px;
+  `,
+
+  VideoBtn: styled.TouchableOpacity`
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+  `,
+
+  BtnText: styled.Text`
+    margin-left: 10px;
+    color: ${({ theme }) => theme.text};
+    font-weight: 600;
   `,
 };
