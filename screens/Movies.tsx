@@ -26,7 +26,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
   } = useSWR<MovieResponse>(movieUrl.trending, fetcher);
   const {
     data: nowPlayingData,
-    error: playingError,
+    error: nowPlayingError,
     mutate: mutateNowPlaying,
   } = useSWR<MovieResponse>(movieUrl.nowPlaying, fetcher);
   const {
@@ -40,8 +40,18 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
     fetcher,
   );
 
-  const isLoading = !trendingData || !nowPlayingData;
-  const isError = trendingError || playingError || upComingError;
+  const isLoadingInitialData =
+    (!trendingData && !trendingError) ||
+    (!nowPlayingData && !nowPlayingError) ||
+    (!upComingData && !upComingError);
+
+  const isLoadingMore =
+    isLoadingInitialData ||
+    (upComingPage > 0 &&
+      upComingData &&
+      typeof upComingData[upComingPage - 1] === 'undefined');
+
+  const isError = trendingError || nowPlayingError || upComingError;
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -49,11 +59,9 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
     setRefreshing(false);
   };
 
-  const loadMore = () => {
-    upComingSetPage(upComingPage + 1);
-  };
+  const loadMore = () => upComingSetPage(upComingPage + 1);
 
-  if (isLoading) return <Loader />;
+  if (isLoadingInitialData) return <Loader />;
 
   if (isError)
     return (
@@ -122,6 +130,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
           }
         />
       )}
+      {isLoadingMore && <Loader />}
     </Styled.SafeAreaView>
   );
 };
