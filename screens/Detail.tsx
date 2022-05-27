@@ -53,12 +53,12 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
     if (isAndroid) {
       await Share.share({
         message: `${params.overview}\nCheck it out: ${homepage}`,
-        title: params.original_title || params.original_name,
+        title: isMovie ? params.original_title : params.original_name,
       });
     } else {
       await Share.share({
         url: homepage,
-        title: params.original_title || params.original_name,
+        title: isMovie ? params.original_title : params.original_name,
       });
     }
   };
@@ -95,14 +95,14 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
         <Styled.Column>
           <Poster path={params.poster_path || ''} />
           <Styled.Title>
-            {params.original_title || params.original_name}
+            {isMovie ? params.original_title : params.original_name}
           </Styled.Title>
         </Styled.Column>
       </Styled.Header>
       <Styled.DetailContainer>
         <Styled.Overview>{params.overview}</Styled.Overview>
         {isValidating && <Loader />}
-        {data?.videos?.results?.map((video) => (
+        {data?.videos?.results?.map((video: any) => (
           <Styled.VideoBtn
             key={video.key}
             onPress={() => openYouTube(video.key)}
