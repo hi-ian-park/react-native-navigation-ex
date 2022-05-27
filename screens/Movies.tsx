@@ -6,6 +6,7 @@ import Swiper from 'react-native-swiper';
 // FIXME: 이슈 https://github.com/leecade/react-native-swiper/issues/1183
 import styled from 'styled-components/native';
 import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
 import { MovieResponse, fetcher, movieUrl } from '../api';
 import HCard from '../components/HCard';
@@ -32,15 +33,24 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
     data: upComingData,
     error: upComingError,
     mutate: mutateUpComing,
-  } = useSWR<MovieResponse>(movieUrl.upComing, fetcher);
+    size: upComingPage,
+    setSize: upComingSetPage,
+  } = useSWRInfinite<MovieResponse>(
+    (index) => `${movieUrl.upComing}&page=${index + 1}`,
+    fetcher,
+  );
 
-  const isLoading = !trendingData || !nowPlayingData || !upComingData;
+  const isLoading = !trendingData || !nowPlayingData;
   const isError = trendingError || playingError || upComingError;
 
   const onRefresh = async () => {
     setRefreshing(true);
     await Promise.all([mutateTrending(), mutateNowPlaying(), mutateUpComing()]);
     setRefreshing(false);
+  };
+
+  const loadMore = () => {
+    upComingSetPage(upComingPage + 1);
   };
 
   if (isLoading) return <Loader />;
@@ -51,12 +61,30 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
         Some Error!
       </View>
     );
+
   return (
     <Styled.SafeAreaView>
       {upComingData && (
         <FlatList
-          refreshing={refreshing}
+          data={upComingData
+            ?.flat()
+            .map((res) => res.results)
+            .flat()}
+          keyExtractor={(item) => item.id.toString()}
+          ItemSeparatorComponent={Styled.separatorH}
+          renderItem={({ item }) => (
+            <HCard
+              posterPath={item.poster_path || ''}
+              originalTitle={item.original_title}
+              votes={item.vote_average}
+              releaseDate={item.release_date}
+              overview={item.overview}
+              rawData={item}
+            />
+          )}
           onRefresh={onRefresh}
+          refreshing={refreshing}
+          onEndReached={loadMore}
           ListHeaderComponent={
             <>
               <Swiper
@@ -92,19 +120,6 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
               <Styled.ListTitle>Coming Soon</Styled.ListTitle>
             </>
           }
-          data={upComingData.results}
-          keyExtractor={(item) => item.id.toString()}
-          ItemSeparatorComponent={Styled.separatorH}
-          renderItem={({ item }) => (
-            <HCard
-              posterPath={item.poster_path || ''}
-              originalTitle={item.original_title}
-              votes={item.vote_average}
-              releaseDate={item.release_date}
-              overview={item.overview}
-              rawData={item}
-            />
-          )}
         />
       )}
     </Styled.SafeAreaView>

@@ -54,7 +54,7 @@ export const fetcher = async (url: string, param = '') => {
 
 export const movieUrl = {
   trending: `${BASE_URL}/trending/movie/week?api_key=${API_KEY}&language=ko-KR&region=kr`,
-  upComing: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko-KR&region=kr`,
+  upComing: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko-KR`,
   nowPlaying: `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko-KR&region=kr`,
   search: `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko-KR&region=kr&query=`,
   detail: (id: number) =>
