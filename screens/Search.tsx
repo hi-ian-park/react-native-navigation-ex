@@ -7,9 +7,9 @@ import HCardList from '../components/HCardList';
 import Loader from '../components/Loader';
 
 const Search = () => {
-  const queryRef = useRef('');
   const [shouldFetch, setShouldFetch] = useState(false);
-  const onChangeText = (searchText: string) => (queryRef.current = searchText);
+  const queryRef = useRef('');
+
   const {
     data: movieData,
     isValidating: moviesLoading,
@@ -18,7 +18,6 @@ const Search = () => {
     shouldFetch ? [movieUrl.search, queryRef.current] : null,
     fetcher,
   );
-
   const {
     data: tvData,
     isValidating: tvLoading,
@@ -29,7 +28,7 @@ const Search = () => {
   );
 
   const isLoading = moviesLoading || tvLoading;
-
+  const onChangeText = (searchText: string) => (queryRef.current = searchText);
   const onSubmit = async () => {
     queryRef.current ? setShouldFetch(true) : setShouldFetch(false);
     await Promise.all([revalidateMovie(), revalidateTv()]);
