@@ -13,10 +13,13 @@ import HCard from '../components/HCard';
 import HCardList from '../components/HCardList';
 import Loader from '../components/Loader';
 import Slide from '../components/Slide';
+import { RootStackParamList } from './Detail';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = () => {
+const Movies: React.FC<
+  NativeStackScreenProps<RootStackParamList, 'Movies'>
+> = () => {
   const [refreshing, setRefreshing] = useState(false);
 
   const {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components/native';
 import useSWR from 'swr';
 
@@ -15,7 +15,7 @@ const Search = () => {
     isValidating: moviesLoading,
     mutate: revalidateMovie,
   } = useSWR<MovieResponse>(
-    shouldFetch ? [movieUrl.search, queryRef.current] : null,
+    shouldFetch ? movieUrl.search(queryRef.current) : null,
     fetcher,
   );
   const {
@@ -23,7 +23,7 @@ const Search = () => {
     isValidating: tvLoading,
     mutate: revalidateTv,
   } = useSWR<MovieResponse>(
-    shouldFetch ? [tvUrl.search, queryRef.current] : null,
+    shouldFetch ? tvUrl.search(queryRef.current) : null,
     fetcher,
   );
 

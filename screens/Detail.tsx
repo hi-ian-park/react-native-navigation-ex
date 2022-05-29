@@ -14,13 +14,22 @@ import {
 import styled from 'styled-components/native';
 import useSWR from 'swr';
 
-import { Movie, TV, fetcher, movieUrl, tvUrl } from '../api';
+import {
+  Movie,
+  MovieDetails,
+  TV,
+  TVDetails,
+  fetcher,
+  movieUrl,
+  tvUrl,
+} from '../api';
 import { theme } from '../colors';
 import Loader from '../components/Loader';
 import Poster from '../components/Poster';
 import { makeImgPath } from '../utils';
 
-type RootStackParamList = {
+export type RootStackParamList = {
+  Movies: undefined;
   Detail: Movie | TV;
 };
 
@@ -43,23 +52,29 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
     ? movieUrl.detail(params.id)
     : tvUrl.detail(params.id);
 
-  const { data, isValidating } = useSWR(fetchUrl, fetcher);
+  const { data, isValidating } = useSWR<MovieDetails | TVDetails>(
+    fetchUrl,
+    fetcher,
+  );
 
   const shareMedia = async () => {
-    const isAndroid = Platform.OS === 'android';
-    const homepage = isMovie
-      ? `https://www.imdb.com/title/${data.imdb_id}/`
-      : data.homepage;
-    if (isAndroid) {
-      await Share.share({
-        message: `${params.overview}\nCheck it out: ${homepage}`,
-        title: isMovie ? params.original_title : params.original_name,
-      });
-    } else {
-      await Share.share({
-        url: homepage,
-        title: isMovie ? params.original_title : params.original_name,
-      });
+    if (data) {
+      const isAndroid = Platform.OS === 'android';
+      const homepage =
+        isMovie && 'imdb_id' in data
+          ? `https://www.imdb.com/title/${data.imdb_id}/`
+          : data?.homepage;
+      if (isAndroid) {
+        await Share.share({
+          message: `${params.overview}\nCheck it out: ${homepage}`,
+          title: isMovie ? params.original_title : params.original_name,
+        });
+      } else {
+        await Share.share({
+          url: homepage,
+          title: isMovie ? params.original_title : params.original_name,
+        });
+      }
     }
   };
 
@@ -102,7 +117,7 @@ const Detail: React.FC<DetailScreenProps> = ({ navigation, route }) => {
       <Styled.DetailContainer>
         <Styled.Overview>{params.overview}</Styled.Overview>
         {isValidating && <Loader />}
-        {data?.videos?.results?.map((video: any) => (
+        {data?.videos?.results?.map((video) => (
           <Styled.VideoBtn
             key={video.key}
             onPress={() => openYouTube(video.key)}
